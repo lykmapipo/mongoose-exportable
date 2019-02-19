@@ -32,11 +32,28 @@ const collectExportables = schema => {
 
     // collect if is exportable schema path
     if (isExportable) {
-      exportables[pathName] =
-        _.merge({}, { path: pathName }, schemaType.options);
-      //TODO merge default & .env
-      //TODO prepare header
-      //TODO prepare formatter(date, number, currency)
+      // obtain options
+      const options = (
+        _.isBoolean(schemaType.options.exportable) ? {} :
+        schemaType.options.exportable
+      );
+
+      // prepare header
+      const header = (options.header || _.startCase(pathName));
+
+      // prepare column order
+      const order = (options.order || Number.MAX_SAFE_INTEGER);
+
+      // prepare formatter
+      const format = (value) => {
+        if (_.isFunction(options.format)) {
+          return (options.format(value) || value);
+        }
+        return value;
+      };
+
+      // collect exportable with options
+      exportables[pathName] = _.merge({}, { header, order, format });
     }
   };
 

@@ -14,6 +14,11 @@ const PersonSchema = new Schema({
   name: {
     firstName: { type: String, index: true, exportable: true },
     surname: { type: String, index: true, exportable: true }
+  },
+  titles: {
+    type: [String],
+    index: true,
+    exportable: { header: 'Titles' }
   }
 });
 PersonSchema.plugin(exportable);
@@ -31,6 +36,14 @@ describe('mongoose-exportable', () => {
     expect(Person.EXPORTABLE_FIELDS).to.have.property('age');
     expect(Person.EXPORTABLE_FIELDS).to.have.property('name.firstName');
     expect(Person.EXPORTABLE_FIELDS).to.have.property('name.surname');
+  });
+
+  it('should set default exportable field options', () => {
+    const { age } = Person.EXPORTABLE_FIELDS;
+    expect(age.header).to.be.equal('Age');
+    expect(age.order).to.be.equal(Number.MAX_SAFE_INTEGER);
+    expect(age.format).to.be.a('function');
+    expect(age.format(4)).to.be.equal(4);
   });
 
   after(done => clear(done));
