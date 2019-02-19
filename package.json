@@ -8,9 +8,8 @@
     "lykmapipo",
     "export",
     "exportable",
-    "csv",
-    "excel",
-    "json"
+    "download",
+    "csv"
   ],
   "main": "index.js",
   "scripts": {
