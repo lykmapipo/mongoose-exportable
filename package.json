@@ -1,7 +1,7 @@
 {
   "name": "@lykmapipo/mongoose-exportable",
   "version": "0.1.0",
-  "description": "mongoose plugin to add exports behaviour",
+  "description": "mongoose plugin to add exports behavior",
   "keywords": [
     "mongoose",
     "mongoose-plugin",
@@ -9,6 +9,7 @@
     "export",
     "exportable",
     "csv",
+    "excel",
     "json"
   ],
   "main": "index.js",

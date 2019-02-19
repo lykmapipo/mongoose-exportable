@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/lykmapipo/mongoose-exportable.svg?branch=master)](https://travis-ci.org/lykmapipo/mongoose-exportable)
 [![Dependencies Status](https://david-dm.org/lykmapipo/mongoose-exportable/status.svg)](https://david-dm.org/lykmapipo/mongoose-exportable)
 
-mongoose plugin to add exports behaviour. 
+mongoose plugin to add exports behavior. 
 
 ## Requirements
 
