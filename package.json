@@ -47,11 +47,11 @@
     "grunt-mocha-test": "^0.13.3",
     "jshint-stylish": "^2.2.1",
     "mocha": "^6.0.0",
-    "mongoose": ">=5.4.13",
+    "mongoose": ">=5.4.14",
     "underscore.string": "^3.3.5"
   },
   "peerDependencies": {
-    "mongoose": ">=5.4.13"
+    "mongoose": ">=5.4.14"
   },
   "dependencies": {
     "@lykmapipo/common": ">=0.8.0",

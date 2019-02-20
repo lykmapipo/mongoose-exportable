@@ -10,16 +10,16 @@ const exportable = include(__dirname, '..');
 
 
 const PersonSchema = new Schema({
-  age: { type: Number, index: true, exportable: true },
   name: {
     firstName: { type: String, index: true, exportable: true },
     surname: { type: String, index: true, exportable: true }
   },
-  titles: {
-    type: [String],
-    index: true,
-    exportable: { header: 'Titles' }
-  }
+  contact: {
+    phone: { type: String, index: true, exportable: true },
+    email: { type: String, index: true }
+  },
+  age: { type: Number, index: true, exportable: true },
+  titles: { type: [String], index: true, exportable: { header: 'Titles' } }
 });
 PersonSchema.plugin(exportable);
 const Person = model('Person', PersonSchema);
@@ -36,6 +36,9 @@ describe('mongoose-exportable', () => {
     expect(Person.EXPORTABLE_FIELDS).to.have.property('age');
     expect(Person.EXPORTABLE_FIELDS).to.have.property('name.firstName');
     expect(Person.EXPORTABLE_FIELDS).to.have.property('name.surname');
+    expect(Person.EXPORTABLE_FIELDS).to.have.property('contact.phone');
+    expect(Person.EXPORTABLE_FIELDS)
+      .to.not.have.property('contact.email');
   });
 
   it('should set default exportable field options', () => {
