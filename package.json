@@ -13,7 +13,8 @@
   ],
   "main": "index.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test && npm run clean",
+    "clean": "grunt clean"
   },
   "repository": {
     "type": "git",
@@ -40,8 +41,10 @@
     "@lykmapipo/mongoose-faker": "^0.9.0",
     "@lykmapipo/mongoose-test-helpers": ">=0.3.0",
     "chai": "^4.2.0",
+    "csv-to-array": "^1.0.2",
     "faker": "^4.1.0",
     "grunt": "^1.0.3",
+    "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-jshint": "^2.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-mocha-test": "^0.13.3",
@@ -56,9 +59,11 @@
   "dependencies": {
     "@lykmapipo/common": ">=0.8.0",
     "@lykmapipo/env": ">=0.5.0",
-    "@lykmapipo/mongoose-common": ">=0.11.0",
+    "@lykmapipo/mongoose-common": ">=0.12.0",
     "async": ">=2.6.2",
     "csv": ">=5.1.1",
-    "lodash": ">=4.17.11"
+    "is-stream": ">=1.1.0",
+    "lodash": ">=4.17.11",
+    "pump": ">=3.0.0"
   }
 }

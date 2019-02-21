@@ -6,6 +6,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-clean');
 
   grunt.initConfig({
     // Configure a mochaTest task
@@ -40,7 +41,8 @@ module.exports = function (grunt) {
         ],
         tasks: ['default']
       }
-    }
+    },
+    clean: { fixtures: ['test/fixtures/**/*.csv'] }
   });
 
   //custom tasks

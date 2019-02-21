@@ -3,8 +3,17 @@
 
 /* dependencies */
 const _ = require('lodash');
+const csv = require('csv');
+const pump = require('pump');
+const isStream = require('is-stream');
+const { uniq } = require('@lykmapipo/common');
 const { getNumber, getString } = require('@lykmapipo/env');
-const { eachPath, isNumber, isString } = require('@lykmapipo/mongoose-common');
+const {
+  eachPath,
+  isNumber,
+  isString,
+  isQuery
+} = require('@lykmapipo/mongoose-common');
 
 
 /**
@@ -84,6 +93,9 @@ const prepareOptions = (pathName, schemaType) => {
   let options = _.get(schemaType, 'options.exportable');
   options = _.isBoolean(options) ? {} : _.merge({}, options);
 
+  // clone path name
+  const path = _.clone(pathName);
+
   // prepare path header
   const header = (options.header || _.startCase(pathName));
 
@@ -102,7 +114,7 @@ const prepareOptions = (pathName, schemaType) => {
   };
 
   // return path exportable options
-  return { header, order, format };
+  return { path, header, order, format };
 };
 
 
@@ -170,8 +182,8 @@ const collectExportables = schema => {
  * const User = mongoose.model('User', UserSchema);
  *
  * //run query and export
- * User.export(); //=> ReadableStream
- * User.export({ $age: { $gte: 14 } }); //=> ReadableStream
+ * User.exportCsv(); //=> ReadableStream
+ * User.exportCsv({ $age: { $gte: 14 } }); //=> ReadableStream
  */
 const exportablePlugin = (schema /*, optns*/ ) => {
   /**
@@ -187,6 +199,68 @@ const exportablePlugin = (schema /*, optns*/ ) => {
    * @static
    */
   schema.statics.EXPORTABLE_FIELDS = collectExportables(schema);
+
+  const mapToSelect = exportables => {
+    const select = {};
+    const fields = uniq([..._.keys(exportables)]);
+    _.forEach(fields, field => {
+      select[field] = 1;
+    });
+    return select;
+  };
+
+  /**
+   * @function exportCsv
+   * @name exportCsv
+   * @description create csv readable stream for exporting a model data
+   * @param {Object|Query} optns valid mongoose query or query options
+   * @return {ReadableStream} writable stream or readable stream
+   * @author lally elias <lallyelias87@mail.com>
+   * @license MIT
+   * @since 0.1.0
+   * @version 0.1.0
+   * @private
+   * const readableStream = User.exportCsv();
+   * readableStream.pipe(...);
+   */
+  schema.statics.exportCsv = function exportCsv( /*optns, writeStream, cb*/ ) {
+    // normalize argurments
+    // const def = { sort: { updatedAt: -1 } };
+    const args = [...arguments];
+    const options = _.find(args, v => isQuery(v) || _.isPlainObject(v));
+    const out = _.find(args, v => isStream(v));
+    const done = _.find(args, v => !isStream(v) && _.isFunction(v));
+
+    const query = isQuery(options) ? options : this.find();
+
+    // select only exportable fields
+    const exportables = this.EXPORTABLE_FIELDS;
+    const fields = mapToSelect(exportables);
+    query.select(fields);
+    // query.sort(options.sort);
+
+    // prepare exportable cursor
+    let cursor = query.cursor();
+
+    // transform data to exportable format
+    const transform = csv.transform(instance => {
+      const object = {};
+      const fields = _.sortBy(_.values(exportables), 'order'); //TODO sort
+      _.forEach(fields, ({ path, header, format }) => {
+        const val = _.get(instance, path);
+        object[header] = format(val);
+      });
+      return object;
+    });
+    // cursor = cursor.pipe(transform).pipe(csv.stringify({ header: true }));
+    const streams =
+      _.compact([cursor, transform, csv.stringify({ header: true }), out]);
+    cursor = pump(...streams, done);
+
+    // return query cursor
+    return cursor;
+  };
+
 };
 
 
