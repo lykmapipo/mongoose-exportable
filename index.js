@@ -275,9 +275,19 @@ const exportablePlugin = (schema /*, optns*/ ) => {
     const done = _.find(args, v => !isStream(v) && _.isFunction(v));
 
     // initialize query
-    const query = isQuery(options) ? options : this.find();
+    let query = isQuery(options) ? options : this.find();
 
-    // TODO apply query options
+    // apply query options
+    if (_.isPlainObject(options)) {
+      const { filter = {}, sort = { updatedAt: -1 } } = options;
+      const { q, ...conditions } = filter;
+      query = (
+        _.isFunction(this.search) ?
+        this.search(q, conditions) :
+        this.find(conditions)
+      );
+      query.sort(sort);
+    }
 
     // select only exportable fields
     const exportables = _.merge({}, this.EXPORTABLE_FIELDS);
