@@ -158,6 +158,58 @@ const collectExportables = schema => {
 
 
 /**
+ * @function mapExportablesToSelect
+ * @name mapExportablesToSelect
+ * @description convert exportable paths mongoose query select option
+ * @param {Object} exportables valid exportables options
+ * @return {Object} query select options
+ * @author lally elias <lallyelias87@mail.com>
+ * @license MIT
+ * @since 0.1.0
+ * @version 0.1.0
+ * @private
+ * const selects = mapExportablesToSelect(exportables);
+ * //=> { name: 1, age: 1 }
+ */
+const mapToSelect = exportables => {
+  const select = {};
+  const fields = uniq([..._.keys(exportables)]);
+  _.forEach(fields, field => {
+    select[field] = 1;
+  });
+  return select;
+};
+
+
+/**
+ * @function mapInstanceToCsv
+ * @name mapInstanceToCsv
+ * @description transform mongoose model instance to csv exportable format
+ * @param {Model} instance valid model instance
+ * @param {Object} exportables valid exportables options
+ * @return {Object} query select options
+ * @author lally elias <lallyelias87@mail.com>
+ * @license MIT
+ * @since 0.1.0
+ * @version 0.1.0
+ * @private
+ * const prepared = mapInstanceToCsv(user, exportables);
+ * //=> { Name: 'John Doe', Age: 34 }
+ */
+const mapInstanceToCsv = exportables => {
+  return csv.transform(instance => {
+    const object = {};
+    const fields = _.sortBy(_.values(exportables), 'order');
+    _.forEach(fields, ({ path, header, format }) => {
+      const val = _.get(instance, path);
+      object[header] = format(val);
+    });
+    return object;
+  });
+};
+
+
+/**
  * @function exportable
  * @name exportable
  * @description mongoose plugin to export schema exportable fields
@@ -200,14 +252,6 @@ const exportablePlugin = (schema /*, optns*/ ) => {
    */
   schema.statics.EXPORTABLE_FIELDS = collectExportables(schema);
 
-  const mapToSelect = exportables => {
-    const select = {};
-    const fields = uniq([..._.keys(exportables)]);
-    _.forEach(fields, field => {
-      select[field] = 1;
-    });
-    return select;
-  };
 
   /**
    * @function exportCsv
@@ -225,36 +269,32 @@ const exportablePlugin = (schema /*, optns*/ ) => {
    */
   schema.statics.exportCsv = function exportCsv( /*optns, writeStream, cb*/ ) {
     // normalize argurments
-    // const def = { sort: { updatedAt: -1 } };
     const args = [...arguments];
     const options = _.find(args, v => isQuery(v) || _.isPlainObject(v));
     const out = _.find(args, v => isStream(v));
     const done = _.find(args, v => !isStream(v) && _.isFunction(v));
 
+    // initialize query
     const query = isQuery(options) ? options : this.find();
 
+    // TODO apply query options
+
     // select only exportable fields
-    const exportables = this.EXPORTABLE_FIELDS;
+    const exportables = _.merge({}, this.EXPORTABLE_FIELDS);
     const fields = mapToSelect(exportables);
     query.select(fields);
-    // query.sort(options.sort);
 
     // prepare exportable cursor
     let cursor = query.cursor();
 
     // transform data to exportable format
-    const transform = csv.transform(instance => {
-      const object = {};
-      const fields = _.sortBy(_.values(exportables), 'order'); //TODO sort
-      _.forEach(fields, ({ path, header, format }) => {
-        const val = _.get(instance, path);
-        object[header] = format(val);
-      });
-      return object;
-    });
-    // cursor = cursor.pipe(transform).pipe(csv.stringify({ header: true }));
-    const streams =
-      _.compact([cursor, transform, csv.stringify({ header: true }), out]);
+    const transform = mapInstanceToCsv(exportables);
+
+    // transform exportable to strings
+    const stringify = csv.stringify({ header: true });
+
+    // collect stream for pumping i.e A->B->C etc.
+    const streams = _.compact([cursor, transform, stringify, out]);
     cursor = pump(...streams, done);
 
     // return query cursor
