@@ -1,3 +1,9 @@
+#### 0.2.0 (2019-02-21)
+
+##### New Features
+
+*  apply options on export query ([b8aa10a0](https://github.com/lykmapipo/mongoose-exportable/commit/b8aa10a0c710013c45285b47ac468b8a9ff92ed2))
+
 #### 0.1.0 (2019-02-21)
 
 ##### Chores
