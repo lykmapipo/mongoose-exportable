@@ -80,5 +80,25 @@ describe('mongoose-exportable', () => {
     });
   });
 
+  it('should export csv to write stream with options', done => {
+    const options = { sort: { updatedAt: -1 } };
+    User.exportCsv(options, out, ( /*error*/ ) => {
+      readCsv((error, records) => {
+        expect(error).to.not.exist;
+        expect(records).to.exist;
+
+        // assert exported record
+        const names = _.map(users, 'name');
+        const ages = _.map(users, 'age');
+
+        expect(_.map(records, 'Name')).to.be.eql(names);
+        expect(_.map(records, v => Number(v.Age)))
+          .to.be.eql(ages);
+
+        done(error, records);
+      });
+    });
+  });
+
   after(done => clear(done));
 });

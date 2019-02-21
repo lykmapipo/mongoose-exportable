@@ -24,15 +24,22 @@ const UserSchema = new Schema({ name: { type: String, exportable: true } });
 UserSchema.plugin(exportable);
 const User = mongoose.model('User', UserSchema);
 
-const writeStream = ...;
-const readStream = User.exportCsv();
-readStream.pipe(writeStream);
+// fs use 
+const out = fs.createWriteStream('out.csv');
+User.exportCsv().pipe(out);
+
+// express use
+app.get('/users/export', (request, response) => {
+    response.attachment('out.csv');
+    response.status(200);
+    User.exportCsv().pipe(response);
+});
 ```
 
 ## API
 
 ### `exportable(schema: Schema, [options: Object])`
-A exportable schema plugin. Once applied to a schema will allow to compute tags from `exportable` schema field and and `tag` and `untag` instance methods
+A exportable schema plugin. Once applied to a schema will compute `exportable` paths and add [exportCsv](#exportcsvoptns-object-out-writablestream-cb-function) model `static` function.
 
 Example
 ```js
@@ -41,15 +48,22 @@ UserSchema.plugin(exportable);
 const User = mongoose.model('User', UserSchema);
 ```
 
-
-### `exportCsv([criteria: Object])`
+### `exportCsv([optns: Object], [out: WritableStream], [cb: Function])`
 Create `csv` export readable stream.
 
-Example:
+Usage with `fs`:
 ```js
-const writeStream = ...;
-const readStream = User.exportCsv();
-readStream.pipe(writeStream);
+const out = fs.createWriteStream('out.csv');
+User.exportCsv().pipe(out);
+```
+
+Usage with `express`
+```js
+app.get('/users/export', (request, response) => {
+    response.attachment('out.csv');
+    response.status(200);
+    User.exportCsv().pipe(response);
+});
 ```
 
 ## Testing
