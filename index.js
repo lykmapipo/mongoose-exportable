@@ -280,7 +280,8 @@ const exportablePlugin = (schema /*, optns*/ ) => {
     // apply query options
     if (_.isPlainObject(options)) {
       const { filter = {}, sort = { updatedAt: -1 } } = options;
-      const { q, ...conditions } = filter;
+      const q = _.get(filter, 'q');
+      const conditions = _.omit(filter, 'q');
       query = (
         _.isFunction(this.search) ?
         this.search(q, conditions) :
