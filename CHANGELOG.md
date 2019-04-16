@@ -1,3 +1,13 @@
+#### 0.2.1 (2019-04-16)
+
+##### Documentation Changes
+
+*  add code of conduct & contributing guide ([18d69995](https://github.com/lykmapipo/mongoose-exportable/commit/18d699952ae4db4450789f2ee58b7a68c6d07c90))
+
+##### Bug Fixes
+
+*  clear rest property error && force latest dependencies ([e0b63ec2](https://github.com/lykmapipo/mongoose-exportable/commit/e0b63ec29b854c0a74b5a3b61d24c12ac456a5b4))
+
 #### 0.2.0 (2019-02-21)
 
 ##### New Features
