@@ -1,3 +1,11 @@
+#### 0.2.2 (2019-05-01)
+
+##### Chores
+
+* **ci:**  force latest nodejs ([b5beef56](https://github.com/lykmapipo/mongoose-exportable/commit/b5beef56cb5cba6525b0e72b225eb671ff428e59))
+* **.npmrc:**  prevent npm version to commit and tag version ([aefc4d27](https://github.com/lykmapipo/mongoose-exportable/commit/aefc4d27fab31283e7473ee877bebd651444b63e))
+* **deps:**  force latest version & audit fix ([7d0f7d7b](https://github.com/lykmapipo/mongoose-exportable/commit/7d0f7d7b346ac15b08d7dd0f06783a1779693d48))
+
 #### 0.2.1 (2019-04-16)
 
 ##### Documentation Changes
