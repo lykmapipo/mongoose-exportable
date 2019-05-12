@@ -2,6 +2,7 @@
 
 /* dependencies */
 const { Schema } = require('@lykmapipo/mongoose-common');
+const { expect } = require('@lykmapipo/mongoose-test-helpers');
 
 
 module.exports = new Schema({
@@ -24,7 +25,12 @@ module.exports = new Schema({
   age: {
     type: Number,
     fake: f => f.random.number({ min: 5, max: 85 }),
-    exportable: true
+    exportable: {
+      format: (val, instance) => {
+        expect(instance).to.exist;
+        return val;
+      }
+    }
   },
   titles: {
     type: [String],
