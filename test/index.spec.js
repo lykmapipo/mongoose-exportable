@@ -8,7 +8,9 @@ const { include } = require('@lykmapipo/include');
 const {
   clear,
   expect,
-  createTestModel
+  createTestModel,
+  // enableDebug,
+  // disableDebug
 } = require('@lykmapipo/mongoose-test-helpers');
 const csv2array = require('csv-to-array');
 const exportable = include(__dirname, '..');
@@ -92,10 +94,21 @@ describe('mongoose-exportable', () => {
     });
   });
 
-  it('should export query csv to write stream', done => {
+  it('should export query to csv', done => {
     User.find().exportCsv(out, ( /*error*/ ) => {
       readCsv((error, records) => {
         assertExport(error, records);
+        done(error, records);
+      });
+    });
+  });
+
+  it('should export aggregate to csv', done => {
+    // enableDebug();
+    User.aggregate().exportCsv(out, ( /*error*/ ) => {
+      readCsv((error, records) => {
+        assertExport(error, records);
+        // disableDebug();
         done(error, records);
       });
     });

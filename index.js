@@ -13,7 +13,8 @@ const {
   isNumber,
   isString,
   isQuery,
-  Query
+  Query,
+  Aggregate
 } = require('@lykmapipo/mongoose-common');
 
 
@@ -312,6 +313,53 @@ const exportablePlugin = (schema /*, optns*/ ) => {
     return cursor;
   };
 
+  /**
+   * @memberOf Aggregate
+   * @function exportCsv
+   * @name exportCsv
+   * @description create csv readable stream for exporting current aggregation 
+   * data
+   * @param {stream.Writable} [writeStream] valid writable stream
+   * @param {Function} [done] function to invoke on export success or failure
+   * @return {stream.Readable|stream.Writable} writable stream or readable stream
+   * @author lally elias <lallyelias87@mail.com>
+   * @license MIT
+   * @since 0.3.0
+   * @version 0.1.0
+   * @public
+   * @example
+   * 
+   * const readableStream = User.aggregate().exportCsv();
+   * readableStream.pipe(...);
+   * 
+   */
+  Aggregate.prototype.exportCsv = function exportCsv( /*writeStream, cb*/ ) {
+    // normalize argurments
+    const args = [...arguments];
+    const out = _.find(args, v => isStream(v));
+    const done = _.find(args, v => !isStream(v) && _.isFunction(v));
+
+    // select only exportable fields
+    const exportables = _.merge({}, EXPORTABLE_FIELDS);
+    const fields = mapToSelect(exportables);
+    this.project(fields);
+
+    // prepare exportable cursor
+    let cursor = this.cursor().exec();
+
+    // transform data to exportable format
+    const transform = mapInstanceToCsv(exportables);
+
+    // transform exportable to strings
+    const stringify = csv.stringify({ header: true });
+
+    // collect stream for pumping i.e A->B->C etc.
+    const streams = _.compact([cursor, transform, stringify, out]);
+    cursor = pump(...streams, done);
+
+    // return query cursor
+    return cursor;
+  };
 
   /**
    * @memberOf Model
