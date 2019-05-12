@@ -82,7 +82,7 @@ const defaultValueOf = schemaType => {
  * @author lally elias <lallyelias87@mail.com>
  * @license MIT
  * @since 0.1.0
- * @version 0.1.0
+ * @version 0.2.0
  * @private
  * @example
  * const options = prepareOptions(schemaType); 
@@ -191,18 +191,26 @@ const mapToSelect = exportables => {
  * @author lally elias <lallyelias87@mail.com>
  * @license MIT
  * @since 0.1.0
- * @version 0.1.0
+ * @version 0.2.0
  * @private
  * const prepared = mapInstanceToCsv(user, exportables);
  * //=> { Name: 'John Doe', Age: 34 }
  */
 const mapInstanceToCsv = exportables => {
   return csv.transform(instance => {
-    const object = {};
+    let object = {};
     const fields = _.sortBy(_.values(exportables), 'order');
     _.forEach(fields, ({ path, header, format }) => {
       const val = _.get(instance, path);
-      object[header] = format(val, instance);
+      const formatted = format(val, instance);
+      // handle plain object
+      if (_.isPlainObject(formatted)) {
+        object = _.merge({}, object, formatted);
+      }
+      // handle primitives
+      else {
+        object[header] = formatted;
+      }
     });
     return object;
   });
