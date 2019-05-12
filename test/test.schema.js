@@ -34,5 +34,12 @@ module.exports = {
     type: [String],
     fake: f => f.lorem.words(5).split(' '),
     exportable: { header: 'Titles' }
+  },
+  status: {
+    type: String,
+    fake: f => f.hacker.ingverb(),
+    exportable: {
+      format: val => ({ 'Status Name': val, 'Status Weight': 1 })
+    }
   }
 };

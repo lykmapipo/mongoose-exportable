@@ -69,10 +69,11 @@ describe('mongoose-exportable', () => {
         // assert exported record
         const names = _.map(users, 'name');
         const ages = _.map(users, 'age');
+        const statuses = _.map(users, 'status');
 
         expect(_.map(records, 'Name')).to.be.eql(names);
-        expect(_.map(records, v => Number(v.Age)))
-          .to.be.eql(ages);
+        expect(_.map(records, 'Status Name')).to.be.eql(statuses);
+        expect(_.map(records, v => Number(v.Age))).to.be.eql(ages);
 
         done(error, records);
       });
@@ -89,10 +90,11 @@ describe('mongoose-exportable', () => {
         // assert exported record
         const names = _.map(users, 'name');
         const ages = _.map(users, 'age');
+        const statuses = _.map(users, 'status');
 
         expect(_.map(records, 'Name')).to.be.eql(names);
-        expect(_.map(records, v => Number(v.Age)))
-          .to.be.eql(ages);
+        expect(_.map(records, 'Status Name')).to.be.eql(statuses);
+        expect(_.map(records, v => Number(v.Age))).to.be.eql(ages);
 
         done(error, records);
       });
