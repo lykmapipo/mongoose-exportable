@@ -1,9 +1,18 @@
 'use strict';
 
 /* dependencies */
+const { ObjectId } = require('@lykmapipo/mongoose-common');
 const { expect } = require('@lykmapipo/mongoose-test-helpers');
 
 module.exports = {
+  parent: {
+    type: ObjectId,
+    ref: 'User',
+    aggregatable: true,
+    exportable: {
+      format: val => val && val.name ? ({ 'Parent Name': val.name }) : 'NA'
+    }
+  },
   name: {
     type: String,
     fake: f => f.name.findName(),
