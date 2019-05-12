@@ -36,6 +36,12 @@ app.get('/users/export', (request, response) => {
 });
 ```
 
+## Environment
+```js
+NUMBER_MISSING_VALUE=0
+STRING_MISSING_VALUE=NA
+```
+
 ## API
 
 ### `exportable(schema: Schema, [options: Object])`
