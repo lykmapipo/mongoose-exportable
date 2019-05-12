@@ -103,6 +103,15 @@ describe('mongoose-exportable', () => {
     });
   });
 
+  it.skip('should export lean query to csv', done => {
+    User.find().lean().exportCsv(out, ( /*error*/ ) => {
+      readCsv((error, records) => {
+        assertExport(error, records);
+        done(error, records);
+      });
+    });
+  });
+
   it('should export aggregate to csv', done => {
     // enableDebug();
     User.aggregate().exportCsv(out, ( /*error*/ ) => {
