@@ -106,9 +106,9 @@ const prepareOptions = (pathName, schemaType) => {
   const defaultValue = defaultValueOf(schemaType);
 
   // prepare path formatter
-  const format = (value = defaultValue) => {
+  const format = (value = defaultValue, instance = {}) => {
     if (_.isFunction(options.format)) {
-      return (options.format(value) || value);
+      return (options.format(value, instance) || value);
     }
     return value;
   };
@@ -202,7 +202,7 @@ const mapInstanceToCsv = exportables => {
     const fields = _.sortBy(_.values(exportables), 'order');
     _.forEach(fields, ({ path, header, format }) => {
       const val = _.get(instance, path);
-      object[header] = format(val);
+      object[header] = format(val, instance);
     });
     return object;
   });
