@@ -103,7 +103,7 @@ describe('mongoose-exportable', () => {
     });
   });
 
-  it.skip('should export lean query to csv', done => {
+  it('should export lean query to csv', done => {
     User.find().lean().exportCsv(out, ( /*error*/ ) => {
       readCsv((error, records) => {
         assertExport(error, records);
@@ -113,11 +113,22 @@ describe('mongoose-exportable', () => {
   });
 
   it('should export aggregate to csv', done => {
-    // enableDebug();
     User.aggregate().exportCsv(out, ( /*error*/ ) => {
       readCsv((error, records) => {
         assertExport(error, records);
-        // disableDebug();
+        done(error, records);
+      });
+    });
+  });
+
+  it('should export aggregate to csv with custom exportables', done => {
+    const exportables = { name: { path: 'name', header: 'Name' } };
+    User.aggregate().exportCsv(out, exportables, ( /*error*/ ) => {
+      readCsv((error, records) => {
+        expect(error).to.not.exist;
+        expect(records).to.exist;
+        const names = _.map(users, 'name');
+        expect(_.map(records, 'Name')).to.be.eql(names);
         done(error, records);
       });
     });
