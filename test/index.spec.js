@@ -4,22 +4,21 @@
 /* dependencies */
 const { createWriteStream } = require('fs');
 const _ = require('lodash');
-const { expect } = require('chai');
 const { include } = require('@lykmapipo/include');
-const { model } = require('@lykmapipo/mongoose-common');
-const { clear } = require('@lykmapipo/mongoose-test-helpers');
+const {
+  clear,
+  expect,
+  createTestModel
+} = require('@lykmapipo/mongoose-test-helpers');
 const csv2array = require('csv-to-array');
-const faker = require('@lykmapipo/mongoose-faker');
 const exportable = include(__dirname, '..');
 
 const readCsv = done =>
   csv2array({ file: `${__dirname}/fixtures/out.csv`, columns: true }, done);
 const out = createWriteStream(`${__dirname}/fixtures/out.csv`);
 
-const UserSchema = require('./test.schema');
-UserSchema.plugin(faker);
-UserSchema.plugin(exportable);
-const User = model('User', UserSchema);
+const schema = include(__dirname, 'test.schema');
+const User = createTestModel(schema, { modelName: 'User' }, exportable);
 
 
 describe('mongoose-exportable', () => {

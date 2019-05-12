@@ -1,11 +1,9 @@
 'use strict';
 
 /* dependencies */
-const { Schema } = require('@lykmapipo/mongoose-common');
 const { expect } = require('@lykmapipo/mongoose-test-helpers');
 
-
-module.exports = new Schema({
+module.exports = {
   name: {
     type: String,
     fake: f => f.name.findName(),
@@ -37,4 +35,4 @@ module.exports = new Schema({
     fake: f => f.lorem.words(5).split(' '),
     exportable: { header: 'Titles' }
   }
-});
+};
