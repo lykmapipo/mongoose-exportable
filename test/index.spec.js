@@ -125,6 +125,23 @@ describe('mongoose-exportable', () => {
     });
   });
 
+  it('should export aggregatables to csv', done => {
+    const out = createWriteStream(`${__dirname}/fixtures/out.csv`);
+    User.lookup().exportCsv(out, ( /*error*/ ) => {
+      readCsv((error, records) => {
+        expect(error).to.not.exist;
+        expect(records).to.exist;
+        const names =
+          _.compact(_.map(users, user => _.get(user,
+            'parent.name')));
+        expect(names)
+          .to.include.members(_.compact(_.map(records,
+            'Parent Name')));
+        done(error, records);
+      });
+    });
+  });
+
   it('should export aggregate to csv with custom exportables', done => {
     const out = createWriteStream(`${__dirname}/fixtures/out.csv`);
     const exportables = { name: { path: 'name', header: 'Name' } };
