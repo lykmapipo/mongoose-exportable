@@ -12,7 +12,8 @@ const {
   eachPath,
   isNumber,
   isString,
-  isQuery
+  isQuery,
+  Query
 } = require('@lykmapipo/mongoose-common');
 
 
@@ -246,7 +247,12 @@ const mapInstanceToCsv = exportables => {
  * User.exportCsv({ $age: { $gte: 14 } }); //=> ReadableStream
  */
 const exportablePlugin = (schema /*, optns*/ ) => {
+  // collect exportable fields
+  const EXPORTABLE_FIELDS = collectExportables(schema);
+
+
   /**
+   * @memberOf Model
    * @constant
    * @name EXPORTABLE_FIELDS
    * @type {Object}
@@ -258,10 +264,11 @@ const exportablePlugin = (schema /*, optns*/ ) => {
    * @public
    * @static
    */
-  schema.statics.EXPORTABLE_FIELDS = collectExportables(schema);
+  schema.statics.EXPORTABLE_FIELDS = EXPORTABLE_FIELDS;
 
 
   /**
+   * @memberOf Model
    * @function exportCsv
    * @name exportCsv
    * @description create csv readable stream for exporting a model data
@@ -271,7 +278,8 @@ const exportablePlugin = (schema /*, optns*/ ) => {
    * @license MIT
    * @since 0.1.0
    * @version 0.1.0
-   * @private
+   * @public
+   * @static
    * const readableStream = User.exportCsv();
    * readableStream.pipe(...);
    */
@@ -299,12 +307,57 @@ const exportablePlugin = (schema /*, optns*/ ) => {
     }
 
     // select only exportable fields
-    const exportables = _.merge({}, this.EXPORTABLE_FIELDS);
+    const exportables = _.merge({}, EXPORTABLE_FIELDS);
     const fields = mapToSelect(exportables);
     query.select(fields);
 
     // prepare exportable cursor
     let cursor = query.cursor();
+
+    // transform data to exportable format
+    const transform = mapInstanceToCsv(exportables);
+
+    // transform exportable to strings
+    const stringify = csv.stringify({ header: true });
+
+    // collect stream for pumping i.e A->B->C etc.
+    const streams = _.compact([cursor, transform, stringify, out]);
+    cursor = pump(...streams, done);
+
+    // return query cursor
+    return cursor;
+  };
+
+
+  /**
+   * @memberOf Query
+   * @function exportCsv
+   * @name exportCsv
+   * @description create csv readable stream for exporting a model data
+   * @param {Function} [done] function to invoke on export success or failure
+   * @return {ReadableStream} writable stream or readable stream
+   * @author lally elias <lallyelias87@mail.com>
+   * @license MIT
+   * @since 0.3.0
+   * @version 0.1.0
+   * @public
+   * const readableStream = User.find().exportCsv();
+   * readableStream.pipe(...);
+   * 
+   */
+  Query.prototype.exportCsv = function exportCsv( /*writeStream, cb*/ ) {
+    // normalize argurments
+    const args = [...arguments];
+    const out = _.find(args, v => isStream(v));
+    const done = _.find(args, v => !isStream(v) && _.isFunction(v));
+
+    // select only exportable fields
+    const exportables = _.merge({}, EXPORTABLE_FIELDS);
+    const fields = mapToSelect(exportables);
+    this.select(fields);
+
+    // prepare exportable cursor
+    let cursor = this.cursor();
 
     // transform data to exportable format
     const transform = mapInstanceToCsv(exportables);

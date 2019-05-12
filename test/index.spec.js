@@ -33,6 +33,19 @@ describe('mongoose-exportable', () => {
     });
   });
 
+  const assertExport = (error, records) => {
+    expect(error).to.not.exist;
+    expect(records).to.exist;
+
+    const names = _.map(users, 'name');
+    const ages = _.map(users, 'age');
+    const statuses = _.map(users, 'status');
+
+    expect(_.map(records, 'Name')).to.be.eql(names);
+    expect(_.map(records, 'Status Name')).to.be.eql(statuses);
+    expect(_.map(records, v => Number(v.Age))).to.be.eql(ages);
+  };
+
   it('should navigate paths and build exportable fields', () => {
     expect(User.EXPORTABLE_FIELDS).to.exist;
     expect(User.EXPORTABLE_FIELDS).to.be.an('object');
@@ -63,18 +76,7 @@ describe('mongoose-exportable', () => {
   it('should export csv to write stream', done => {
     User.exportCsv(out, ( /*error*/ ) => {
       readCsv((error, records) => {
-        expect(error).to.not.exist;
-        expect(records).to.exist;
-
-        // assert exported record
-        const names = _.map(users, 'name');
-        const ages = _.map(users, 'age');
-        const statuses = _.map(users, 'status');
-
-        expect(_.map(records, 'Name')).to.be.eql(names);
-        expect(_.map(records, 'Status Name')).to.be.eql(statuses);
-        expect(_.map(records, v => Number(v.Age))).to.be.eql(ages);
-
+        assertExport(error, records);
         done(error, records);
       });
     });
@@ -84,18 +86,16 @@ describe('mongoose-exportable', () => {
     const options = { sort: { updatedAt: -1 } };
     User.exportCsv(options, out, ( /*error*/ ) => {
       readCsv((error, records) => {
-        expect(error).to.not.exist;
-        expect(records).to.exist;
+        assertExport(error, records);
+        done(error, records);
+      });
+    });
+  });
 
-        // assert exported record
-        const names = _.map(users, 'name');
-        const ages = _.map(users, 'age');
-        const statuses = _.map(users, 'status');
-
-        expect(_.map(records, 'Name')).to.be.eql(names);
-        expect(_.map(records, 'Status Name')).to.be.eql(statuses);
-        expect(_.map(records, v => Number(v.Age))).to.be.eql(ages);
-
+  it.only('should export query csv to write stream', done => {
+    User.find().exportCsv(out, ( /*error*/ ) => {
+      readCsv((error, records) => {
+        assertExport(error, records);
         done(error, records);
       });
     });
