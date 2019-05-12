@@ -250,7 +250,6 @@ const exportablePlugin = (schema /*, optns*/ ) => {
   // collect exportable fields
   const EXPORTABLE_FIELDS = collectExportables(schema);
 
-
   /**
    * @memberOf Model
    * @constant
@@ -266,81 +265,21 @@ const exportablePlugin = (schema /*, optns*/ ) => {
    */
   schema.statics.EXPORTABLE_FIELDS = EXPORTABLE_FIELDS;
 
-
-  /**
-   * @memberOf Model
-   * @function exportCsv
-   * @name exportCsv
-   * @description create csv readable stream for exporting a model data
-   * @param {Object|Query} optns valid mongoose query or query options
-   * @return {ReadableStream} writable stream or readable stream
-   * @author lally elias <lallyelias87@mail.com>
-   * @license MIT
-   * @since 0.1.0
-   * @version 0.1.0
-   * @public
-   * @static
-   * const readableStream = User.exportCsv();
-   * readableStream.pipe(...);
-   */
-  schema.statics.exportCsv = function exportCsv( /*optns, writeStream, cb*/ ) {
-    // normalize argurments
-    const args = [...arguments];
-    const options = _.find(args, v => isQuery(v) || _.isPlainObject(v));
-    const out = _.find(args, v => isStream(v));
-    const done = _.find(args, v => !isStream(v) && _.isFunction(v));
-
-    // initialize query
-    let query = isQuery(options) ? options : this.find();
-
-    // apply query options
-    if (_.isPlainObject(options)) {
-      const { filter = {}, sort = { updatedAt: -1 } } = options;
-      const q = _.get(filter, 'q');
-      const conditions = _.omit(filter, 'q');
-      query = (
-        _.isFunction(this.search) ?
-        this.search(q, conditions) :
-        this.find(conditions)
-      );
-      query.sort(sort);
-    }
-
-    // select only exportable fields
-    const exportables = _.merge({}, EXPORTABLE_FIELDS);
-    const fields = mapToSelect(exportables);
-    query.select(fields);
-
-    // prepare exportable cursor
-    let cursor = query.cursor();
-
-    // transform data to exportable format
-    const transform = mapInstanceToCsv(exportables);
-
-    // transform exportable to strings
-    const stringify = csv.stringify({ header: true });
-
-    // collect stream for pumping i.e A->B->C etc.
-    const streams = _.compact([cursor, transform, stringify, out]);
-    cursor = pump(...streams, done);
-
-    // return query cursor
-    return cursor;
-  };
-
-
   /**
    * @memberOf Query
    * @function exportCsv
    * @name exportCsv
-   * @description create csv readable stream for exporting a model data
+   * @description create csv readable stream for exporting current query data
+   * @param {stream.Writable} [writeStream] valid writable stream
    * @param {Function} [done] function to invoke on export success or failure
-   * @return {ReadableStream} writable stream or readable stream
+   * @return {stream.Readable|stream.Writable} writable stream or readable stream
    * @author lally elias <lallyelias87@mail.com>
    * @license MIT
    * @since 0.3.0
    * @version 0.1.0
    * @public
+   * @example
+   * 
    * const readableStream = User.find().exportCsv();
    * readableStream.pipe(...);
    * 
@@ -371,6 +310,54 @@ const exportablePlugin = (schema /*, optns*/ ) => {
 
     // return query cursor
     return cursor;
+  };
+
+
+  /**
+   * @memberOf Model
+   * @function exportCsv
+   * @name exportCsv
+   * @description create csv readable stream for exporting model data
+   * @param {stream.Writable} [writeStream] valid writable stream
+   * @param {Function} [done] function to invoke on export success or failure
+   * @return {stream.Readable|stream.Writable} writable stream or readable stream
+   * @author lally elias <lallyelias87@mail.com>
+   * @license MIT
+   * @since 0.1.0
+   * @version 0.1.0
+   * @public
+   * @static
+   * @example
+   * 
+   * const readableStream = User.exportCsv();
+   * readableStream.pipe(...);
+   * 
+   */
+  schema.statics.exportCsv = function exportCsv( /*optns, writeStream, cb*/ ) {
+    // normalize argurments
+    const args = [...arguments];
+    const options = _.find(args, v => isQuery(v) || _.isPlainObject(v));
+    const out = _.find(args, v => isStream(v));
+    const done = _.find(args, v => !isStream(v) && _.isFunction(v));
+
+    // initialize query
+    let query = isQuery(options) ? options : this.find();
+
+    // apply query options
+    if (_.isPlainObject(options)) {
+      const { filter = {}, sort = { updatedAt: -1 } } = options;
+      const q = _.get(filter, 'q');
+      const conditions = _.omit(filter, 'q');
+      query = (
+        _.isFunction(this.search) ?
+        this.search(q, conditions) :
+        this.find(conditions)
+      );
+      query.sort(sort);
+    }
+
+    // return query cursor
+    return query.exportCsv(out, done);
   };
 
 };

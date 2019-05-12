@@ -92,7 +92,7 @@ describe('mongoose-exportable', () => {
     });
   });
 
-  it.only('should export query csv to write stream', done => {
+  it('should export query csv to write stream', done => {
     User.find().exportCsv(out, ( /*error*/ ) => {
       readCsv((error, records) => {
         assertExport(error, records);
