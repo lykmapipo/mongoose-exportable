@@ -1,3 +1,34 @@
+#### 0.3.0 (2019-05-12)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([5c427f5d](https://github.com/lykmapipo/mongoose-exportable/commit/5c427f5df1d68ea15797977ac0eeba64248c359e))
+
+##### Documentation Changes
+
+*  add missing environment variables ([f068160f](https://github.com/lykmapipo/mongoose-exportable/commit/f068160f40b278ebdb4e8314935f8b5fe078fcd9))
+
+##### New Features
+
+*  allow aggregatable refs to be expotable ([7f7e758e](https://github.com/lykmapipo/mongoose-exportable/commit/7f7e758e5f0dddafffd9c7e1b18270e7bb1b7369))
+*  allow custom exportables on aggregate exportCsv ([d60ed41f](https://github.com/lykmapipo/mongoose-exportable/commit/d60ed41f21d48bf0c4247d21dae28bd4b9e359df))
+*  implement aggregate exportCsv ([884d71b0](https://github.com/lykmapipo/mongoose-exportable/commit/884d71b036f6869c98c9287c25e15c5bf5ebacba))
+*  add exportCsv into query ([de98f995](https://github.com/lykmapipo/mongoose-exportable/commit/de98f995bd327a53036419c284200e81f200664f))
+*  allow merging plain object formatted values for export ([f5875824](https://github.com/lykmapipo/mongoose-exportable/commit/f5875824557d20f96c665cec664832effd60d9a4))
+*  pass instance on exportable format function ([6abaf2b8](https://github.com/lykmapipo/mongoose-exportable/commit/6abaf2b887929a35469426e58388090bc077f47a))
+
+##### Refactors
+
+*  use query.exportCsv in Model.exportCsv ([801950fe](https://github.com/lykmapipo/mongoose-exportable/commit/801950fed0df50ccc3cadfa16b1866e35eff08a5))
+
+##### Tests
+
+*  refactor to use include.members than eql in arrays assertions ([b20fe463](https://github.com/lykmapipo/mongoose-exportable/commit/b20fe463ed2c33cb55240d628f0d57493c025bb2))
+*  improve lean query exports ([c1dfd720](https://github.com/lykmapipo/mongoose-exportable/commit/c1dfd720f98a6de3154d14bbce8e6d18d9acd2aa))
+*  improver plain object exportable formatter specs ([84dc7d32](https://github.com/lykmapipo/mongoose-exportable/commit/84dc7d32de8b9b5e542bffff04fcad7e52b2b244))
+*  refactor to use mongoose-test-helpers ([ad04517b](https://github.com/lykmapipo/mongoose-exportable/commit/ad04517bace319917add80074a12dac237334a04))
+*  assert passed instance on exportable format ([3a3c7c0d](https://github.com/lykmapipo/mongoose-exportable/commit/3a3c7c0d044618457656f03c451bc5c279df36ce))
+
 #### 0.2.2 (2019-05-01)
 
 ##### Chores

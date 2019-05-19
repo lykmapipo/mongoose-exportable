@@ -200,8 +200,11 @@ const mapToSelect = exportables => {
  */
 const mapInstanceToCsv = exportables => {
   return csv.transform(instance => {
+    // initialize
     let object = {};
     const fields = _.sortBy(_.values(exportables), 'order');
+
+    // collec fields to exportable object
     _.forEach(fields, ({ path, header, format }) => {
       const val = _.get(instance, path);
       const formatted =
@@ -215,6 +218,15 @@ const mapInstanceToCsv = exportables => {
         object[header] = formatted;
       }
     });
+
+    // escape comma if string
+    _.forEach(object, (value, key) => {
+      if (_.isString(value)) {
+        object[key] = value.replace(/,/g, ';');
+      }
+    });
+
+    // return exportabe instance
     return object;
   });
 };
