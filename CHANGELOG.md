@@ -1,3 +1,9 @@
+#### 0.3.1 (2019-05-19)
+
+##### Bug Fixes
+
+*  escape comma using semi colon ([a2c3d34d](https://github.com/lykmapipo/mongoose-exportable/commit/a2c3d34defd1ef096882b02b56b6969bb6b93804))
+
 #### 0.3.0 (2019-05-12)
 
 ##### Chores
