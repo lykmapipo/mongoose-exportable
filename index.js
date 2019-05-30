@@ -261,8 +261,8 @@ const mapInstanceToCsv = exportables => {
  * User.exportCsv({ $age: { $gte: 14 } }); //=> ReadableStream
  */
 const exportablePlugin = (schema /*, optns*/ ) => {
-  // collect exportable fields
-  const EXPORTABLE_FIELDS = collectExportables(schema);
+  // prevent plugin from applied multiple times
+  if (schema.statics.EXPORTABLE_FIELDS) { return; }
 
   /**
    * @memberOf Model
@@ -277,7 +277,7 @@ const exportablePlugin = (schema /*, optns*/ ) => {
    * @public
    * @static
    */
-  schema.statics.EXPORTABLE_FIELDS = EXPORTABLE_FIELDS;
+  schema.statics.EXPORTABLE_FIELDS = collectExportables(schema);
 
   /**
    * @memberOf Query
@@ -306,7 +306,7 @@ const exportablePlugin = (schema /*, optns*/ ) => {
       const done = _.find(args, v => !isStream(v) && _.isFunction(v));
 
       // select only exportable fields
-      const exportables = _.merge({}, EXPORTABLE_FIELDS);
+      const exportables = _.merge({}, this.model.EXPORTABLE_FIELDS);
       const fields = mapToSelect(exportables);
       this.select(fields);
 
@@ -360,7 +360,7 @@ const exportablePlugin = (schema /*, optns*/ ) => {
       const exportables = (
         !_.isEmpty(options) ?
         _.merge({}, options) :
-        _.merge({}, EXPORTABLE_FIELDS)
+        _.merge({}, this._model.EXPORTABLE_FIELDS)
       );
       const fields = mapToSelect(exportables);
       this.project(fields);
