@@ -1,3 +1,13 @@
+#### 0.3.3 (2019-05-30)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([021063e0](https://github.com/lykmapipo/mongoose-exportable/commit/021063e035ec95fab130e94b82d584e58cb4ceea))
+
+##### Bug Fixes
+
+*  prevent exportable fields overrides ([30d45e69](https://github.com/lykmapipo/mongoose-exportable/commit/30d45e6931515d79ba91083f5170efb1f6165f8d))
+
 #### 0.3.2 (2019-05-20)
 
 ##### Chores
