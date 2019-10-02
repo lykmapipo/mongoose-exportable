@@ -109,10 +109,16 @@ const prepareOptions = (pathName, schemaType) => {
 
   // prepare path formatter
   const format = (value = defaultValue, instance = {}) => {
+    // ensure value
+    const val = _.isFunction(value) ? value() : value;
+
+    // format value with path formatter
     if (_.isFunction(options.format)) {
-      return (options.format(value, instance) || value);
+      return (options.format(val, instance) || val);
     }
-    return value;
+
+    // return value
+    return val;
   };
 
   // return path exportable options
