@@ -1,3 +1,13 @@
+#### 0.3.10 (2019-10-02)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([3b24e69f](https://github.com/lykmapipo/mongoose-exportable/commit/3b24e69fdbb2f92d562dbf16a68f52e201b7de26))
+
+##### Tests
+
+*  add filter test cases ([54666f3e](https://github.com/lykmapipo/mongoose-exportable/commit/54666f3eabde591146455129f85314e5e7561d95))
+
 #### 0.3.9 (2019-09-28)
 
 ##### Chores
