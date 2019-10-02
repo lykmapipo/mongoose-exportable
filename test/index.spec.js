@@ -42,9 +42,9 @@ describe('mongoose-exportable', () => {
     const ages = _.map(users, 'age');
     const statuses = _.map(users, 'status');
 
-    expect(_.map(records, 'Name')).to.include.members(names);
-    expect(_.map(records, 'Status Name')).to.include.members(statuses);
-    expect(_.map(records, v => Number(v.Age))).to.include.members(ages);
+    expect(names).to.include.members(_.map(records, 'Name'));
+    expect(statuses).to.include.members(_.map(records, 'Status Name'));
+    expect(ages).to.include.members(_.map(records, v => Number(v.Age)));
   };
 
   it('should navigate paths and build exportable fields', () => {
@@ -87,6 +87,45 @@ describe('mongoose-exportable', () => {
   it('should export csv to write stream with options', done => {
     const out = createWriteStream(`${__dirname}/fixtures/out.csv`);
     const options = { sort: { updatedAt: -1 } };
+    User.exportCsv(options, out, ( /*error*/ ) => {
+      readCsv((error, records) => {
+        assertExport(error, records);
+        done(error, records);
+      });
+    });
+  });
+
+  it('should export csv to write stream with filter options', done => {
+    const out = createWriteStream(`${__dirname}/fixtures/out.csv`);
+    const options = {
+      filter: { name: users[0].name },
+      sort: { updatedAt: -1 }
+    };
+    User.exportCsv(options, out, ( /*error*/ ) => {
+      readCsv((error, records) => {
+        assertExport(error, records);
+        done(error, records);
+      });
+    });
+  });
+
+  it('should export csv to write stream with query string', done => {
+    const out = createWriteStream(`${__dirname}/fixtures/out.csv`);
+    const options = {
+      filter: { q: users[0].name },
+      sort: { updatedAt: -1 }
+    };
+    User.exportCsv(options, out, ( /*error*/ ) => {
+      readCsv((error, records) => {
+        assertExport(error, records);
+        done(error, records);
+      });
+    });
+  });
+
+  it('should export csv to write stream with falsey query string', done => {
+    const out = createWriteStream(`${__dirname}/fixtures/out.csv`);
+    const options = { filter: { q: undefined }, sort: { updatedAt: -1 } };
     User.exportCsv(options, out, ( /*error*/ ) => {
       readCsv((error, records) => {
         assertExport(error, records);
