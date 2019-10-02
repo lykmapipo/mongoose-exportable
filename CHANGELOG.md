@@ -1,3 +1,9 @@
+#### 0.3.11 (2019-10-02)
+
+##### Bug Fixes
+
+*  handle functional value ([eb3f97fc](https://github.com/lykmapipo/mongoose-exportable/commit/eb3f97fc91ba63ddb0d53ec1859a78707fd1bb3a))
+
 #### 0.3.10 (2019-10-02)
 
 ##### Chores
