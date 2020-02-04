@@ -1,6 +1,6 @@
 {
   "name": "@lykmapipo/mongoose-exportable",
-  "version": "0.3.20",
+  "version": "0.3.21",
   "description": "mongoose plugin to add exports behavior",
   "keywords": [
     "mongoose",
