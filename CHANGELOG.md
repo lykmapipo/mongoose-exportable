@@ -1,3 +1,9 @@
+#### 0.3.32 (2020-06-26)
+
+##### Chores
+
+* **deps:**  force latest version & audit fix ([ca393cf4](https://github.com/lykmapipo/mongoose-exportable/commit/ca393cf4dfc78941378f4b24e3f621331d1c8d3b))
+
 #### 0.3.31 (2020-06-10)
 
 ##### Chores
