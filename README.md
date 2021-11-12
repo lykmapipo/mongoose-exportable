@@ -1,24 +1,34 @@
 # mongoose-exportable
 
-[![Build Status](https://travis-ci.org/lykmapipo/mongoose-exportable.svg?branch=master)](https://travis-ci.org/lykmapipo/mongoose-exportable)
-[![Dependencies Status](https://david-dm.org/lykmapipo/mongoose-exportable/status.svg)](https://david-dm.org/lykmapipo/mongoose-exportable)
+[![Build Status](https://app.travis-ci.com/lykmapipo/mongoose-exportable.svg?branch=master)](https://app.travis-ci.com/lykmapipo/mongoose-exportable)
+[![Dependencies Status](https://david-dm.org/lykmapipo/mongoose-exportable.svg)](https://david-dm.org/lykmapipo/mongoose-exportable)
+[![Coverage Status](https://coveralls.io/repos/github/lykmapipo/mongoose-exportable/badge.svg?branch=master)](https://coveralls.io/github/lykmapipo/mongoose-exportable?branch=master)
+[![GitHub License](https://img.shields.io/github/license/lykmapipo/mongoose-exportable)](https://github.com/lykmapipo/mongoose-exportable/blob/develop/LICENSE)
 
-mongoose plugin to add exports behavior. 
+[![Commitizen Friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![Code Style](https://badgen.net/badge/code%20style/airbnb/ff5a5f?icon=airbnb)](https://github.com/airbnb/javascript)
+[![npm version](https://img.shields.io/npm/v/@lykmapipo/mongoose-exportable)](https://www.npmjs.com/package/@lykmapipo/mongoose-exportable)
+
+mongoose plugin to add aggregations behaviour. 
 
 ## Requirements
 
-- NodeJS v9.3+
+- [NodeJS v13+](https://nodejs.org)
+- [Npm v6.12+](https://www.npmjs.com/)
+- [MongoDB v4+](https://www.mongodb.com/)
+- [Mongoose v6+](https://github.com/Automattic/mongoose)
 
 ## Install
 ```sh
-$ npm install --save @lykmapipo/mongoose-exportable
+$ npm install --save mongoose @lykmapipo/mongoose-exportable
 ```
 
 ## Usage
 
 ```javascript
-const mongoose = require('mongoose');
-const exportable = require('@lykmapipo/mongoose-exportable');
+import mongoose from 'mongoose';
+import exportable from '@lykmapipo/mongoose-exportable';
 
 const UserSchema = new Schema({ name: { type: String, exportable: true } });
 UserSchema.plugin(exportable);
@@ -90,7 +100,7 @@ It will be nice, if you open an issue first so that we can know what is going on
 ## Licence
 The MIT License (MIT)
 
-Copyright (c) 2019 lykmapipo & Contributors
+Copyright (c) lykmapipo & Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
