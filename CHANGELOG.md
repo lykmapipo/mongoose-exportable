@@ -1,3 +1,17 @@
+#### 0.4.0 (2021-11-12)
+
+##### Chores
+
+* **release:**  compile latest source ([b4426e96](https://github.com/lykmapipo/mongoose-exportable/commit/b4426e964ab322ec538dd7edf4ab92ed978bf63f))
+* **deps:**
+  *  bump bl from 2.2.0 to 2.2.1 ([e8509f09](https://github.com/lykmapipo/mongoose-exportable/commit/e8509f09633df1ec4311c96544b81b97d32d3dc3))
+  *  bump ini from 1.3.5 to 1.3.7 ([05196fa0](https://github.com/lykmapipo/mongoose-exportable/commit/05196fa092a4774724252734c61cda18d966e2a5))
+  *  bump websocket-extensions from 0.1.3 to 0.1.4 ([64703274](https://github.com/lykmapipo/mongoose-exportable/commit/64703274fcbab0d8d583957442225d64e6b9aa28))
+
+##### Refactors
+
+*  migrate to es6 ([536ba0a0](https://github.com/lykmapipo/mongoose-exportable/commit/536ba0a0d0d7874523231d27237c741fc7e0220d))
+
 #### 0.3.36 (2020-08-08)
 
 ##### Chores
